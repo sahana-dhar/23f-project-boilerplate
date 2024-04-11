@@ -1,7 +1,6 @@
-# Talentia: Connecting Talents and Agents
+# Talentia
 
-## Project Overview:
-Our P
+Talentia is a web app designed to connect entertainers and agencies in a cohesive manner. It is made with 
 
 This repo contains a boilerplate setup for spinning up 3 Docker containers: 
 1. A MySQL 8 container for obvious reasons
