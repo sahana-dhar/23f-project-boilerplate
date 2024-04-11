@@ -1,6 +1,7 @@
-# MySQL + Flask Boilerplate Project
+# Talentia: Connecting Talents and Agents
 
 ## Project Overview:
+Our P
 
 This repo contains a boilerplate setup for spinning up 3 Docker containers: 
 1. A MySQL 8 container for obvious reasons
