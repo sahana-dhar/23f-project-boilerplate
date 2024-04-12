@@ -185,3 +185,5 @@ VALUES('123456', 'timmystar321', 'Victim #3');
 
 INSERT INTO Agents_Director
 VALUES('lschectady', 'devvance');
+
+SHOW DATABASES;

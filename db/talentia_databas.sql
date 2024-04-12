@@ -1,4 +1,3 @@
-DROP DATABASE Talentia;
 CREATE DATABASE Talentia;
 USE Talentia;
 
@@ -557,7 +556,7 @@ insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('jcawcu
 insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('mconradseny', 'abrameld7', 'Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo.', 6);
 insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('abeevis1', 'tshercliff13', 'Suspendisse potenti. Nullam porttitor lacus at turpis.', 10);
 insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('jsamber1g', 'esaffe1b', 'Curabitur convallis.', 1);
-insert ininsert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('rpehrssonn', 'baery14', 'Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede. Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus.', 7);
+insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('rpehrssonn', 'baery14', 'Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede. Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus.', 7);
 insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('hsearchfield1h', 'turlinz', 'Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam. Nam tristique tortor eu pede.', 3);
 insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('jsamber1g', 'tnyssenv', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue.', 2);
 insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('emoird', 'abrameld7', 'Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue.', 9);
@@ -715,7 +714,7 @@ insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('zcrose
 insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('sjolleyj', 'dyurevichd', 'Nulla tellus.', 6);
 insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('tsnewino', 'bpetricek10', 'Nullam varius. Nulla facilisi. Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit.', 8);
 insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('mheinlf', 'mcoviello17', 'Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo.', 7);
-insert insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('nciccettip', 'smcgahernr', 'In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus. Nulla ut erat id mauris vulputate elementum.', 3);
+insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('nciccettip', 'smcgahernr', 'In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus. Nulla ut erat id mauris vulputate elementum.', 3);
 insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('sjolleyj', 'cpearsey18', 'Nullam varius.', 7);
 insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('nmarunchak1d', 'npyser9', 'Phasellus in felis. Donec semper sapien a libero.', 5);
 insert into Critic_Actor (CriticUser, ActorUser, Review, Rating) values ('jcawcutt7', 'egoodanew3', 'In hac habitasse platea dictumst. Etiam faucibus cursus urna.', 10);
@@ -1053,7 +1052,7 @@ insert into Media_Actor (MediaID, ActorUser) values (929364, 'tshercliff13');
 insert into Media_Actor (MediaID, ActorUser) values (588227, 'gvandendael19');
 insert into Media_Actor (MediaID, ActorUser) values (755791, 'kheckney1n');
 insert into Media_Actor (MediaID, ActorUser) values (176014, 'obeardsleyk');
-insert into Media_Actor (MediaID, ActorUser) values (317500, 'dyurevichd');
+insert into Media_Actor (MediaID, ActorUser) values (317500, 'bpetricek10');
 insert into Media_Actor (MediaID, ActorUser) values (406797, 'bpetricek10');
 insert into Media_Actor (MediaID, ActorUser) values (406797, 'pschottlib');
 insert into Media_Actor (MediaID, ActorUser) values (734311, 'smcgahernr');
