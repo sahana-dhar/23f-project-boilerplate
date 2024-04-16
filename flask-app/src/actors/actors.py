@@ -43,7 +43,7 @@ def get_customer(userID):
 
 # Get the role an actor played in some media
 @actors.route('/Actor/<ActorUser>', methods=['GET'])
-def get_customer(userID):
+def get_role(userID):
     cursor = db.get_db().cursor()
     cursor.execute('select * from Actor where ActorUser = {0}'.format(userID))
     row_headers = [x[0] for x in cursor.description]
@@ -172,11 +172,11 @@ def remove_actor():
     #extracting the variable
     actor_user_id = the_data['ActorUser']
 
-query = "REMOVE * from ACTOR where ActorUser = {0}"
-curent_app.logger.info(query)
-db.get_db().commit
+    query = "REMOVE * from ACTOR where ActorUser = {0}"
+    current_app.logger.info(query)
+    db.get_db().commit
 
-return 'Success!'
+    return 'Success!'
 
 ## get roles an actor has played
 @media_actor.route('/Media_Actor/<ActorUser>', methods=['GET'])
