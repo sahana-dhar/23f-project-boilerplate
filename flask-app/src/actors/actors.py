@@ -3,7 +3,7 @@ import json
 from src import db
 
 
-actors = Blueprint('Actor', __name__)
+actors = Blueprint('actors', __name__)
 agents = Blueprint('Agent', __name__)
 casting_directors = Blueprint('CastingDirector', __name__)
 critic_actor = Blueprint('Critic_Actor', __name__)
@@ -11,7 +11,7 @@ media_actor = Blueprint('Media_Actor', __name__)
 
 
 # Get all actors from the DB
-@actors.route('/Actor', methods=['GET'])
+@actors.route('/actors', methods=['GET'])
 def get_actors():
     cursor = db.get_db().cursor()
     cursor.execute('select ActorUser, FirstName, LastName,\
@@ -26,11 +26,13 @@ def get_actors():
     the_response.mimetype = 'application/json'
     return the_response
 
-# Get actor info for actor with particular userID
-@actors.route('/Actor/<ActorUser>', methods=['GET'])
-def get_customer(userID):
+# get info on a specific actor
+@actors.route('/actors/<ActorUser>', methods=['GET'])
+def get_customer(ActorUser):
     cursor = db.get_db().cursor()
-    cursor.execute('select * from Actor where ActorUser = {0}'.format(userID))
+    # Use parameterized query to prevent SQL injection
+    query = 'SELECT * FROM Actor WHERE ActorUser = %s'
+    cursor.execute(query, (ActorUser,))
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
@@ -41,11 +43,13 @@ def get_customer(userID):
     the_response.mimetype = 'application/json'
     return the_response
 
-# Get the role an actor played in some media
-@actors.route('/Actor/<ActorUser>', methods=['GET'])
-def get_role(userID):
+# currently - gets all roles of an actor
+# todo- Get the role an actor played in some media
+@actors.route('/role/<ActorUser>', methods=['GET'])
+def get_role(ActorUser):
     cursor = db.get_db().cursor()
-    cursor.execute('select * from Actor where ActorUser = {0}'.format(userID))
+    # Using parameterized query to avoid SQL injection
+    cursor.execute('SELECT Role FROM Media_Actor WHERE ActorUser = %s', (ActorUser,))
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
@@ -57,7 +61,7 @@ def get_role(userID):
     return the_response
 
 ## update an actor's agent
-@actors.route('/Actor', methods=['PUT'])
+@actors.route('/actors', methods=['PUT'])
 def update_actor_agent():
     # collecting data from the request object 
     the_data = request.json
@@ -79,7 +83,7 @@ def update_actor_agent():
     return "success"
 
 ## updates actor resume with new info
-@actors.route('/Actor/<ActorUser>', methods=['POST'])
+@actors.route('/actors/<ActorUser>', methods=['POST'])
 def insert_into_actor_resume():
     # collecting data from the request object 
     the_data = request.json
@@ -101,7 +105,7 @@ def insert_into_actor_resume():
     return "success"
 
 ## update actor's years of experience
-@actors.route('/Actor/<ActorUser>', methods=['PUT'])
+@actors.route('/actors/<ActorUser>', methods=['PUT'])
 def update_actor_years():
     # collecting data from the request object 
     the_data = request.json
@@ -123,7 +127,7 @@ def update_actor_years():
     return "success"
 
 ## add a new actor
-@actors.route('/Actor', methods=['POST'])
+@actors.route('/actors', methods=['POST'])
 def add_new_actor():
     
     # collecting data from the request object 
@@ -163,7 +167,7 @@ def add_new_actor():
     
     return 'Success!'
 
-@actors.route('/Actor', methods=['DELETE'])
+@actors.route('/actors', methods=['DELETE'])
 def remove_actor():
     # collecting data from the request object 
     the_data = request.json

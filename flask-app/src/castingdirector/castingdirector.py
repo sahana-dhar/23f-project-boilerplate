@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify, make_response, current_app
 from src import db
 
-castingdirector = Blueprint('CastingDirector', __name__)
+castingdirector = Blueprint('castingdirector', __name__)
 
 # get casting director contact info
-@castingdirector.route("/CastingDirector/<DirectorUser>", methods=["GET"])
+@castingdirector.route("/castingdirector", methods=["GET"])
 def get_director():
     # get a cursor object from the database
     cursor = db.get_db().cursor()

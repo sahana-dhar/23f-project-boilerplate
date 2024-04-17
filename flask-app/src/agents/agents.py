@@ -1,38 +1,65 @@
-# 1) GET: return the salary of an agent
-@agent.route('/agent', methods=['GET'])
-def get_agent_pay():
+from flask import Blueprint, request, jsonify, make_response
+import json
+from src import db
+
+
+agents = Blueprint('agents', __name__)
+
+'''# 1) GET: return the salary of an agent
+@agents.route('/agents/<AgentUser>', methods=['GET'])
+def get_agents_pay(AgentUser):
    # get a cursor object from the database
    cursor = db.get_db().cursor()
 
-
    # use cursor to query the database for a list of products
-   cursor.execute('SELECT ContractMoney FROM Agent')
-
+   query =('SELECT ContractMoney FROM Agent WHERE AgentUser = %s')
+   cursor.execute(query, (AgentUser,))
 
    # grab the column headers from the returned data
    column_headers = [x[0] for x in cursor.description]
-
 
    # create an empty dictionary object to use in 
    # putting column headers together with data
    json_data = []
 
-
    # fetch all the data from the cursor
    theData = cursor.fetchall()
-
 
    # for each of the rows, zip the data elements together with
    # the column headers. 
    for row in theData:
        json_data.append(dict(zip(column_headers, row)))
 
+   return jsonify(json_data)'''
 
-   return jsonify(json_data)
+@agents.route('/agents/<AgentUser>', methods=['GET'])
+def get_agents_pay(AgentUser):
+    # get a cursor object from the database
+    cursor = db.get_db().cursor()
 
+    # use cursor to query the database for the agent's salary
+    query = 'SELECT ContractMoney FROM Agent WHERE AgentUser = %s'
+    cursor.execute(query, (AgentUser,))
+
+   # grab the column headers from the returned data
+    column_headers = [x[0] for x in cursor.description]
+
+    # create an empty dictionary object to use in 
+    # putting column headers together with data
+    json_data = []
+
+    # fetch all the data from the cursor
+    theData = cursor.fetchall()
+
+    # for each of the rows, zip the data elements together with
+    # the column headers. 
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+
+    return jsonify(json_data)
 
 # 2) PUT: update a resume for an agent
-@agent.route('/Agent', methods=['PUT'])
+@agents.route('/agents', methods=['PUT'])
 def put_agent_experience():
    
    # collecting data from the request object 
@@ -59,8 +86,8 @@ def put_agent_experience():
 
 
 # 3) PUT: update an agent's years of experience
-@agent.route('/Agent', methods=['PUT'])
-def put_agent_experience():
+@agents.route('/agents', methods=['PUT'])
+def update_agent_experience():
    
    # collecting data from the request object 
    the_data = request.json
@@ -86,8 +113,8 @@ def put_agent_experience():
 
 
 # 4) POST: insert an agent's attributes into Agent
-@agent.route('/Agent', methods=['POST'])
-def post_agent_attributes():
+@agents.route('/agents', methods=['POST'])
+def post_agents_attributes():
 
 
    # collecting data from the request object 
@@ -121,8 +148,8 @@ def post_agent_attributes():
 
 
 # 5) DELETE: delete an agent's atttirbutes from Agent
-@agent.route('/Agent', methods=['DELETE'])
-def delete_agent_attributes():
+@agents.route('/agents', methods=['DELETE'])
+def delete_agents_attributes():
 
 
    # collecting data from the request object 
@@ -144,7 +171,7 @@ def delete_agent_attributes():
 
 
 # 6) GET: return the first and last name of agent
-@agent.route('Agent', methods=['GET'])
+@agents.route('/agents', methods=['GET'])
 def get_agent_name():
    # get a cursor object from the database
    cursor = db.get_db().cursor()
