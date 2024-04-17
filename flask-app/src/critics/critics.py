@@ -88,10 +88,9 @@ def get_role(MediaID,ActorUser):
 def get_average_rating(ActorUser):
     # get a cursor object from the database
     cursor = db.get_db().cursor()
-
-    query = 'SELECT Rating FROM Actor WHERE ActorUser = ' + ActorUser
+    query = 'SELECT AvgRating FROM Actor WHERE ActorUser = %s' 
     # use cursor to query the database for a list of products
-    cursor.execute(query)
+    cursor.execute(query, (ActorUser,))
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
@@ -109,6 +108,23 @@ def get_average_rating(ActorUser):
         json_data.append(dict(zip(column_headers, row)))
 
     return jsonify(json_data)
+
+'''@critics.route('/Actor/<ActorUser>', methods=['GET'])
+def get_average_rating(ActorUser):
+    # get a cursor object from the database
+    cursor = db.get_db().cursor()
+
+    query = 'SELECT Rating FROM Actor WHERE ActorUser = %s'  # Use parameterized query to avoid SQL injection
+    cursor.execute(query, (ActorUser,))
+
+    ratings = [row[0] for row in cursor.fetchall()]  # Fetch all ratings
+
+    if not ratings:  # If no ratings found, return 0
+        return jsonify({'average_rating': 0})
+
+    average_rating = sum(ratings) / len(ratings)  # Calculate average rating
+
+    return jsonify({'average_rating': average_rating})'''
 
 # Returns the release date of particular media
 @critics.route('/Media/<MediaID>', methods=['GET'])
