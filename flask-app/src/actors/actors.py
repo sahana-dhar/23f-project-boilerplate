@@ -27,7 +27,7 @@ def get_actors():
     return the_response
 
 # get info on a specific actor
-@actors.route('/actors/<ActorUser>', methods=['GET'])
+@actors.route('/actors/ActorUser', methods=['GET'])
 def get_customer(ActorUser):
     cursor = db.get_db().cursor()
     # Use parameterized query to prevent SQL injection
@@ -45,7 +45,7 @@ def get_customer(ActorUser):
 
 # currently - gets all roles of an actor
 # todo- Get the role an actor played in some media
-@actors.route('/role/<ActorUser>', methods=['GET'])
+@actors.route('/role/ActorUser', methods=['GET'])
 def get_role(ActorUser):
     cursor = db.get_db().cursor()
     # Using parameterized query to avoid SQL injection
@@ -83,7 +83,7 @@ def update_actor_agent():
     return "success"
 
 ## updates actor resume with new info
-@actors.route('/actors/<ActorUser>', methods=['POST'])
+@actors.route('/actors/ActorUser', methods=['POST'])
 def insert_into_actor_resume():
     # collecting data from the request object 
     the_data = request.json
@@ -105,7 +105,7 @@ def insert_into_actor_resume():
     return "success"
 
 ## update actor's years of experience
-@actors.route('/actors/<ActorUser>', methods=['PUT'])
+@actors.route('/actors/ActorUser', methods=['PUT'])
 def update_actor_years():
     # collecting data from the request object 
     the_data = request.json
@@ -183,7 +183,7 @@ def remove_actor():
     return 'Success!'
 
 ## get roles an actor has played
-@media_actor.route('/Media_Actor/<ActorUser>', methods=['GET'])
+@media_actor.route('/Media_Actor/ActorUser', methods=['GET'])
 def get_actor_role(userID):
     cursor = db.get_db().cursor()
     cursor.execute('select Role from Media_Actor where ActorUser = {0}'.format(userID))
@@ -213,7 +213,7 @@ def get_agents(userID):
     return the_response
 
 ## get all reviews left for an actor
-@critic_actor.route('/Critic_Actor/<ActorUser>', methods=['GET'])
+@critic_actor.route('/Critic_Actor/ActorUser', methods=['GET'])
 def get_reviews(userID):
     cursor = db.get_db().cursor()
     cursor.execute('select Reviews from CRITIC_ACTOR where Critic_Actor.ActorUser = Actor.ActorUser AND Actor.ActorUser = {0}'.format(userID))
