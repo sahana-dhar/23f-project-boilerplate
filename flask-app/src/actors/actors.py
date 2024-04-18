@@ -55,7 +55,7 @@ def get_customer(ActorUser):
 
 # currently - gets all roles of an actor
 # todo- Get the role an actor played in some media
-@actors.route('/role/<ActorUser>', methods=['GET'])
+@actors.route('/role/ActorUser', methods=['GET'])
 def get_role(ActorUser):
     cursor = db.get_db().cursor()
     # Using parameterized query to avoid SQL injection
