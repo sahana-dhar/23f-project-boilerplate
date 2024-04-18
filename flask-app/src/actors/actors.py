@@ -37,7 +37,7 @@ def get_actors():
     return jsonify(json_data)
 
 # get info on a specific actor
-@actors.route('/actors/<ActorUser>', methods=['GET'])
+@actors.route('/actors/ActorUser', methods=['GET'])
 def get_customer(ActorUser):
     cursor = db.get_db().cursor()
     # Use parameterized query to prevent SQL injection
