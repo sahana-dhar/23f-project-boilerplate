@@ -56,10 +56,10 @@ def get_customer(ActorUser):
 # currently - gets all roles of an actor
 # todo- Get the role an actor played in some media
 @actors.route('/role/ActorUser', methods=['GET'])
-def get_role(ActorUser):
+def get_role():
     cursor = db.get_db().cursor()
     # Using parameterized query to avoid SQL injection
-    cursor.execute('SELECT Role FROM Media_Actor WHERE ActorUser = %s', (ActorUser,))
+    cursor.execute('SELECT Role FROM Media_Actor WHERE ActorUser = %s')
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
