@@ -59,7 +59,7 @@ def get_customer(ActorUser):
 def get_role(ActorUser):
     cursor = db.get_db().cursor()
     # Using parameterized query to avoid SQL injection
-    cursor.execute('SELECT Role FROM Media_Actor WHERE ActorUser = %s', (ActorUser,))
+    cursor.execute('SELECT Role FROM Media_Actor)
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
