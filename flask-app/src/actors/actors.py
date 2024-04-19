@@ -1,7 +1,7 @@
 from flask import Blueprint, request, current_app, jsonify, make_response
 import json
 from src import db
-
+## ACTORS
 
 actors = Blueprint('actors', __name__)
 agents = Blueprint('Agent', __name__)
@@ -13,31 +13,21 @@ media_actor = Blueprint('Media_Actor', __name__)
 # Get all actors from the DB
 @actors.route('/actors', methods=['GET'])
 def get_actors():
-    # get a cursor object from the database
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for a list of products
-    cursor.execute('SELECT actoruser, firstname, lastname, phone, email FROM Actor')
-
-    # grab the column headers from the returned data
-    column_headers = [x[0] for x in cursor.description]
-
-    # create an empty dictionary object to use in 
-    # putting column headers together with data
+    cursor.execute('select ActorUser, FirstName, LastName,\
+        Email, AgentUser, YearsExperience, AvgRating, Description, Resume, Phone from Actor')
+    row_headers = [x[0] for x in cursor.description]
     json_data = []
-
-    # fetch all the data from the cursor
     theData = cursor.fetchall()
-
-    # for each of the rows, zip the data elements together with
-    # the column headers. 
     for row in theData:
-        json_data.append(dict(zip(column_headers, row)))
-
-    return jsonify(json_data)
+        json_data.append(dict(zip(row_headers, row)))
+    the_response = make_response(jsonify(json_data))
+    the_response.status_code = 200
+    the_response.mimetype = 'application/json'
+    return the_response
 
 # get info on a specific actor
-@actors.route('/actors/ActorUser', methods=['GET'])
+@actors.route('/actors/<ActorUser>', methods=['GET'])
 def get_customer(ActorUser):
     cursor = db.get_db().cursor()
     # Use parameterized query to prevent SQL injection
@@ -55,11 +45,11 @@ def get_customer(ActorUser):
 
 # currently - gets all roles of an actor
 # todo- Get the role an actor played in some media
-@actors.route('/role/ActorUser', methods=['GET'])
-def get_role():
+@actors.route('/role/<ActorUser>', methods=['GET'])
+def get_role(ActorUser):
     cursor = db.get_db().cursor()
     # Using parameterized query to avoid SQL injection
-    cursor.execute('SELECT Role FROM Media_Actor WHERE ActorUser = %s')
+    cursor.execute('SELECT Role FROM Media_Actor WHERE ActorUser = %s', (ActorUser,))
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
