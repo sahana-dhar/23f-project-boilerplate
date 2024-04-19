@@ -37,6 +37,7 @@ def create_app():
     from src.castingdirector.castingdirector import castingdirector
     from src.critics.critics import critics
     from src.agents.agents import agents
+    from src.actors.actors import critic_actor
 
 
     # Register the routes from each Blueprint with the app object
@@ -45,5 +46,6 @@ def create_app():
     app.register_blueprint(castingdirector,    url_prefix='/castingdirector')
     app.register_blueprint(critics,    url_prefix='/critics')
     app.register_blueprint(agents,    url_prefix='/agents')
+    app.register_blueprint(critic_actor,    url_prefix='/ca')
     # Don't forget to return the app object
     return app

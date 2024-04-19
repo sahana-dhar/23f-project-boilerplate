@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response, current_app
 import json
 from src import db
 
@@ -31,58 +31,108 @@ def get_agents_pay(AgentUser):
        json_data.append(dict(zip(column_headers, row)))
 
    return jsonify(json_data)'''
+# Get all agents from the DB
+@agents.route('/agents', methods=['GET'])
+def get_agents():
+    cursor = db.get_db().cursor()
+    cursor.execute('select AgentUser, FirstName, LastName,\
+        Email, YearsExperience, Description, Resume, ContractMoney, AgencyID, Phone from Agent')
+    row_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        json_data.append(dict(zip(row_headers, row)))
+    the_response = make_response(jsonify(json_data))
+    the_response.status_code = 200
+    the_response.mimetype = 'application/json'
+    return the_response
+
+@agents.route('/agent', methods=['GET'])
+def get_agent():
+    # Get a cursor object from the database
+   cursor = db.get_db().cursor()
+
+   the_data = request.json
+   current_app.logger.info(the_data)
+
+   # Extracting variables
+   first_name = the_data['First_Name']
+   last_name = the_data['Last_Name']
+
+    # Use cursor to query the database for the agent's information
+   query = 'SELECT * FROM Agent WHERE FirstName = ? AND LastName = ?'
+   cursor.execute(query, (first_name, last_name))
+
+    # Fetch all the data from the cursor
+   rows = cursor.fetchall()
+
+    # Grab the column headers from the returned data
+   column_headers = [x[0] for x in cursor.description]
+
+    # Create a list of dictionaries to hold the data
+   json_data = []
+
+    # For each row, zip the data elements together with the column headers
+   for row in rows:
+      json_data.append(dict(zip(column_headers, row)))
+
+    # Return the JSON data
+   the_response = make_response(jsonify(json_data))
+   the_response.status_code = 200
+   the_response.mimetype = 'application/json'
+   return the_response
 
 @agents.route('/agents/<AgentUser>', methods=['GET'])
 def get_agents_pay(AgentUser):
     # get a cursor object from the database
-    cursor = db.get_db().cursor()
+   cursor = db.get_db().cursor()
 
-    # use cursor to query the database for the agent's salary
-    query = 'SELECT ContractMoney FROM Agent WHERE AgentUser = %s'
-    cursor.execute(query, (AgentUser,))
+   # use cursor to query the database for the agent's salary
+   query = 'SELECT ContractMoney FROM Agent WHERE AgentUser = %s'
+   cursor.execute(query, (AgentUser,))
 
    # grab the column headers from the returned data
-    column_headers = [x[0] for x in cursor.description]
+   column_headers = [x[0] for x in cursor.description]
 
     # create an empty dictionary object to use in 
     # putting column headers together with data
-    json_data = []
+   json_data = []
 
     # fetch all the data from the cursor
-    theData = cursor.fetchall()
+   theData = cursor.fetchall()
 
     # for each of the rows, zip the data elements together with
     # the column headers. 
-    for row in theData:
-        json_data.append(dict(zip(column_headers, row)))
+   for row in theData:
+      json_data.append(dict(zip(column_headers, row)))
 
-    return jsonify(json_data)
+   the_response = make_response(jsonify(json_data))
+   the_response.status_code = 200
+   the_response.mimetype = 'application/json'
+   return the_response
 
 # 2) PUT: update a resume for an agent
 @agents.route('/agents', methods=['PUT'])
 def put_agent_experience():
-   
-   # collecting data from the request object 
-   the_data = request.json
-   current_app.logger.info(the_data)
+    # Collecting data from the request object
+    the_data = request.json
+    current_app.logger.info(the_data)
 
+    # Extracting variables
+    first_name = the_data['First_Name']
+    last_name = the_data['Last_Name']
+    new_resume = the_data['Resume']
 
-   #extracting the variable
-   resume = the_data['Resume'] 
+    # Constructing the query to update the resume for the specified agent
+    query = f'UPDATE Agent SET Resume = "{new_resume}" WHERE FirstName = "{first_name}" AND LastName = "{last_name}"'
+    current_app.logger.info(query)
 
+    # Executing and committing the update statement
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
 
-   # Constructing the query to update years of experience
-   query = 'UPDATE Agent SET '
-   query += f'Resume = "{resume}"'
-   current_app.logger.info(query)
-
-
-   # executing and committing the update statement 
-   cursor = db.get_db().cursor()
-   cursor.execute(query)
-   db.get_db().commit()
-   
-   return 'resume for this agent has been updated'
+    return 'Resume for this agent has been updated.'
 
 
 # 3) PUT: update an agent's years of experience
@@ -201,3 +251,25 @@ def get_agent_name():
 
 
    return jsonify(json_data)
+
+
+@agents.route('/getoneagent', methods=['GET'])
+def get_agentsss():
+    # Extracting variables from the request
+    first_name = request.args.get('First_Name')
+    last_name = request.args.get('Last_Name')
+
+    # Query the database to retrieve the agent's information based on first name and last name
+    agent = Agent.query.filter_by(First_Name=first_name, Last_Name=last_name).first()
+
+    if agent:
+        # Convert agent data to dictionary
+        agent_data = {
+            'First_Name': agent.First_Name,
+            'Last_Name': agent.Last_Name,
+            'Resume': agent.Resume
+            # Add other fields as needed
+        }
+        return jsonify(agent_data), 200
+    else:
+        return jsonify({'error': 'Agent not found'}), 404

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, current_app, jsonify, make_response
 import json
 from src import db
 
@@ -61,67 +61,67 @@ def get_role(ActorUser):
     return the_response
 
 ## update an actor's agent
-@actors.route('/actors', methods=['PUT'])
+@actors.route('/updateagents', methods=['PUT'])
 def update_actor_agent():
     # collecting data from the request object 
     the_data = request.json
-
-    #extracting the variable
+    current_app.logger.info(the_data)
+    # Extracting the variable
     agent_user_id = the_data['AgentUser']
+    actor_user_id = the_data['ActorUser']
 
-    # Constructing the query
-    query = """
-        UPDATE Actor
-        SET agent_user_id=%s
-        WHERE actor_user_id=%s
-        """
-    # executing and committing the insert statement 
+    
+    query = f'UPDATE Actor SET AgentUser = "{agent_user_id}" WHERE ActorUser = "{actor_user_id}"'
+    current_app.logger.info(query)
+
+    # Executing and committing the update statement
     cursor = db.get_db().cursor()
-    cursor.execute(query, (agent_user_id))
+    cursor.execute(query)
     db.get_db().commit()
 
     return "success"
 
-## updates actor resume with new info
+# resume 
 @actors.route('/actors/<ActorUser>', methods=['POST'])
-def insert_into_actor_resume():
-    # collecting data from the request object 
+def insert_into_actor_resume(ActorUser):
+    # Collecting data from the request object 
     the_data = request.json
 
-    #extracting the variable
+    # Extracting the variable
     resume = the_data['Resume']
 
     # Constructing the query
     query = """
         UPDATE Actor
-        SET resume=%s
-        WHERE actor_user_id=%s
+        SET resume = %s
+        WHERE actor_user_id = %s
         """
-    # executing and committing the insert statement 
+
+    # Executing and committing the insert statement 
     cursor = db.get_db().cursor()
-    cursor.execute(query, (resume))
+    cursor.execute(query, (resume, ActorUser))  # Pass parameters as a tuple
     db.get_db().commit()
 
     return "success"
 
-## update actor's years of experience
-@actors.route('/actors/<ActorUser>', methods=['PUT'])
-def update_actor_years():
-    # collecting data from the request object 
+@actors.route('/actors/<ActorUser>', methods=['POST'])
+def update_actor_years(ActorUser):
+    # Collecting data from the request object 
     the_data = request.json
 
-    #extracting the variable
+    # Extracting the variable
     years_experience = the_data['YearsExperience']
 
     # Constructing the query
     query = """
         UPDATE Actor
-        SET YearsExperience=%s
-        WHERE actor_user_id=%s
+        SET YearsExperience = %s
+        WHERE actor_user_id = %s
         """
-    # executing and committing the insert statement 
+
+    # Executing and committing the update statement 
     cursor = db.get_db().cursor()
-    cursor.execute(query, (resume))
+    cursor.execute(query, (years_experience, ActorUser))  # Pass parameters as a tuple
     db.get_db().commit()
 
     return "success"
@@ -212,17 +212,66 @@ def get_agents(userID):
     the_response.mimetype = 'application/json'
     return the_response
 
-## get all reviews left for an actor
 @critic_actor.route('/Critic_Actor/<ActorUser>', methods=['GET'])
-def get_reviews(userID):
+def get_reviews(ActorUser):
     cursor = db.get_db().cursor()
-    cursor.execute('select Reviews from CRITIC_ACTOR where Critic_Actor.ActorUser = Actor.ActorUser AND Actor.ActorUser = {0}'.format(userID))
+    
+    # Get the actor user ID from the URL parameter
+    actor_user_id = ActorUser
+
+    # Query to fetch reviews for the actor user
+    query = '''
+            SELECT Review, Rating 
+            FROM Critic_Actor 
+            WHERE ActorUser = %s
+            '''
+    
+    # Execute the query with actor user ID
+    cursor.execute(query, (actor_user_id,))
+
+    # Fetch data and format it as JSON
     row_headers = [x[0] for x in cursor.description]
-    json_data = []
-    theData = cursor.fetchall()
-    for row in theData:
-        json_data.append(dict(zip(row_headers, row)))
+    json_data = [dict(zip(row_headers, row)) for row in cursor.fetchall()]
+
+    # Create the response
+    response = make_response(jsonify(json_data))
+    response.status_code = 200
+    response.mimetype = 'application/json'
+
+    return response
+
+@actors.route('/actorsroles', methods=['GET'])
+def get_actor_role():
+    # Collecting data from the request object
+    the_data = request.json
+
+    # Extracting variables
+    first_name = the_data['first_name']
+    last_name = the_data['last_name']
+
+    # Query to find the ActorUser based on first and last name
+    actor_query = f'SELECT ActorUser FROM Actor WHERE FirstName = "{first_name}" AND LastName = "{last_name}"'
+
+    # Executing the query to get ActorUser
+    cursor = db.get_db().cursor()
+    cursor.execute(actor_query)
+    actor_user_row = cursor.fetchone()
+
+
+    actor_user = actor_user_row[0]  # Extracting ActorUser from the row tuple
+
+    # Query to find Role from Media_Actor table based on ActorUser
+    media_actor_query = f'SELECT Role FROM Media_Actor WHERE ActorUser = "{actor_user}"'
+
+    # Executing the query to get Role
+    cursor.execute(media_actor_query)
+    roles = cursor.fetchall()
+
+    # Formatting the data as JSON
+    json_data = {'roles': [role[0] for role in roles]}
+
     the_response = make_response(jsonify(json_data))
     the_response.status_code = 200
     the_response.mimetype = 'application/json'
     return the_response
+

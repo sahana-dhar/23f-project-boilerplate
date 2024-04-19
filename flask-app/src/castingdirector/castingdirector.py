@@ -10,7 +10,7 @@ def get_director():
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of products
-    cursor.execute('SELECT directoruser, firstname, lastname, phone, email FROM CastingDirector')
+    cursor.execute('SELECT directoruser, firstname, lastname, phone, email, resume, yearsexperience FROM CastingDirector')
 
     # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
