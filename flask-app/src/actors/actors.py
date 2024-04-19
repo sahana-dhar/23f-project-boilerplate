@@ -26,6 +26,21 @@ def get_actors():
     the_response.mimetype = 'application/json'
     return the_response
 
+# Get all actors from the DB
+@actors.route('/criticactors', methods=['GET'])
+def get_reviews():
+    cursor = db.get_db().cursor()
+    cursor.execute('select ActorUser, CriticUser, Rating, Review from Critic_Actor')
+    row_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        json_data.append(dict(zip(row_headers, row)))
+    the_response = make_response(jsonify(json_data))
+    the_response.status_code = 200
+    the_response.mimetype = 'application/json'
+    return the_response
+
 # get info on a specific actor
 @actors.route('/actors/<ActorUser>', methods=['GET'])
 def get_customer(ActorUser):

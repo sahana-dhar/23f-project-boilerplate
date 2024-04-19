@@ -109,33 +109,28 @@ def get_critic():
 
     return jsonify(json_data)
 
-# Delete Critic Profile
-@critics.route('/DeleteCritic/<CriticUser>', methods=['DELETE'])
-def delete_critic(CriticUser):
+@critics.route('/DeleteCritic/<ActorUser>/<CriticUser>', methods=['DELETE'])
+def delete_critic(CriticUser, ActorUser):
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
-    crit = CriticUser
-    query = 'DELETE FROM Critic WHERE CriticUser = %s'
-    # use cursor to query the database for a list of products
-    cursor.execute(query, (crit))
+    # Define the query to delete the review and rating
+    query = 'DELETE FROM Critic_Actor WHERE CriticUser = %s AND ActorUser = %s'
 
-    # grab the column headers from the returned data
-    column_headers = [x[0] for x in cursor.description]
+    # use cursor to execute the query with parameters
+    cursor.execute(query, (CriticUser, ActorUser))
 
-    # create an empty dictionary object to use in 
-    # putting column headers together with data
-    json_data = []
+    # commit the transaction
+    db.get_db().commit()
 
-    # fetch all the data from the cursor
-    theData = cursor.fetchall()
-
-    # for each of the rows, zip the data elements together with
-    # the column headers. 
-    for row in theData:
-        json_data.append(dict(zip(column_headers, row)))
-
-    return jsonify(json_data)
+    # Check if any row was affected by the delete operation
+    if cursor.rowcount > 0:
+        # Return success message
+        return jsonify({"message": "Review and rating deleted successfully."}), 200
+    else:
+        # Return message if no review was found for the given criteria
+        return jsonify({"message": "No review found for the given criteria."}), 404
+    
 
 # Insert new review and rating on an actor
 @critics.route('/PostReview', methods=['POST'])
