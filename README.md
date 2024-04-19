@@ -5,7 +5,7 @@ one stop shop for all; with the ability to search through thousands of actors an
 and leave reviews and ratings, Talentia is the future for streamlining the film industry.
 
 This repo contains a boilerplate setup for spinning up 3 Docker containers: 
-1. A MySQL 8 container for obvious reasons2
+1. A MySQL 8 container
 1. A Python Flask container to implement a REST API
 1. A Local AppSmith Server
 
